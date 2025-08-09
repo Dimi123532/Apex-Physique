@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Elite Physique Blueprint (AI-Powered)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: A tab-based, single-page application (SPA) design was chosen to create a seamless, non-linear user experience. The structure is divided into four logical, task-oriented tabs: 'Blueprint' (core principles), 'Nutrition' (interactive meal planning), 'Workouts' (detailed, switchable programs), and 'Recovery' (actionable advice). This is more intuitive than the report's linear format, allowing a user to quickly access the information most relevant to their immediate needs (e.g., checking today's workout) without scrolling through unrelated sections. Key interactions include tab navigation to switch between content areas, and toggles within the 'Workouts' tab to switch between the 4-day and 6-day splits, providing a direct comparison and clear progression path. -->
+    <!-- Visualization & Content Choices: Report Info -> Goal -> Viz/Presentation Method -> Interaction -> Justification -> Library/Method. 1. Macronutrient Ratios -> Inform -> Donut Chart -> Hover for details -> Visually represents the ideal diet composition for quick understanding -> Chart.js. 2. Workout Programs -> Organize/Instruct -> Interactive Cards in a Tabbed Layout -> Click tabs to switch splits, cards for exercise details -> Allows for easy navigation and comparison of complex workout schedules without overwhelming the user -> HTML/CSS/JS. 3. Safety/Mindset Principles -> Inform/Motivate -> Accordion List -> Click to expand/collapse -> Presents dense text in a digestible, user-controlled format, reducing initial cognitive load -> HTML/CSS/JS. 4. Warm-up/Cool-down -> Instruct -> Stepper/Timeline layout -> Visual flow guide -> Clearly separates and sequences pre- and post-workout routines for easy following -> HTML/CSS. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #333;
+        }
+        .tab-active {
+            border-bottom-color: #A58A73;
+            color: #A58A73;
+            font-weight: 600;
+        }
+        .tab-inactive {
+            border-bottom-color: transparent;
+            color: #777;
+        }
+        .content-active {
+            display: block;
+        }
+        .content-inactive {
+            display: none;
+        }
+        .card {
+            background-color: #FFFFFF;
+            border: 1px solid #EAEAEA;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .loader {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #FFF;
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-[#A58A73] mb-2">The Elite Physique Blueprint</h1>
+            <p class="text-lg text-gray-600">Your Interactive AI-Powered Fitness Guide</p>
+        </header>
+
+        <div class="w-full max-w-5xl mx-auto">
+            <div class="border-b border-gray-200 mb-8">
+                <nav class="flex justify-center -mb-px space-x-6 md:space-x-8" id="main-nav">
+                    <button class="nav-tab text-lg py-4 px-1 border-b-2 tab-active" data-tab="blueprint">Blueprint</button>
+                    <button class="nav-tab text-lg py-4 px-1 border-b-2 tab-inactive" data-tab="nutrition">Nutrition</button>
+                    <button class="nav-tab text-lg py-4 px-1 border-b-2 tab-inactive" data-tab="workouts">Workouts</button>
+                    <button class="nav-tab text-lg py-4 px-1 border-b-2 tab-inactive" data-tab="recovery">Recovery</button>
+                </nav>
+            </div>
+
+            <main id="main-content">
+                <!-- Blueprint / Principles Section -->
+                <section id="blueprint" class="tab-content content-active">
+                    <div class="bg-white p-6 md:p-8 rounded-xl shadow-sm">
+                        <h2 class="text-3xl font-bold text-gray-800 mb-4">The Foundation of Success</h2>
+                        <p class="text-gray-600 mb-8">This section outlines the core principles for building an aesthetic physique. It's not just about lifting weights; it's about training smart, staying safe, and understanding the science of muscle growth. Mastering these concepts is the first step on your journey.</p>
+                        
+                        <div class="space-y-4" id="accordion-container">
+                            <div class="accordion-item border rounded-lg overflow-hidden">
+                                <button class="accordion-header w-full text-left p-4 bg-gray-50 hover:bg-gray-100 flex justify-between items-center">
+                                    <span class="font-semibold text-gray-700">The Science of Aesthetics: The V-Taper</span>
+                                    <span class="text-xl text-gray-500">+</span>
+                                </button>
+                                <div class="accordion-content">
+                                    <div class="p-4 border-t">
+                                        <p class="text-gray-600">The goal is to maximize your shoulder-to-waist ratio, creating a V-taper. This is achieved by building shoulder and back width while keeping your waist lean. While the "Golden Ratio" (~1.618) is a good guide, focus on your personal best, as genetics play a huge role. A balanced physique, including well-developed arms and legs, is key to the overall aesthetic.</p>
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="accordion-item border rounded-lg overflow-hidden">
+                                <button class="accordion-header w-full text-left p-4 bg-gray-50 hover:bg-gray-100 flex justify-between items-center">
+                                    <span class="font-semibold text-gray-700">Progressive Overload: The Key to Growth</span>
+                                    <span class="text-xl text-gray-500">+</span>
+                                </button>
+                                <div class="accordion-content">
+                                    <div class="p-4 border-t">
+                                        <p class="text-gray-600 mb-2">To grow, muscles must be challenged beyond their current capabilities. This doesn't just mean lifting heavier. For a young athlete, progression should be prioritized as follows:</p>
+                                        <ol class="list-decimal list-inside space-y-1 text-gray-600">
+                                            <li><strong>Master Technique:</strong> Perfect form is the foundation.</li>
+                                            <li><strong>Increase Reps:</strong> Add more reps with the same weight.</li>
+                                            <li><strong>Increase Sets:</strong> Add another set to increase total volume.</li>
+                                            <li><strong>Increase Time Under Tension:</strong> Slow down the lowering phase of lifts.</li>
+                                            <li><strong>Increase Weight:</strong> The final step, done in small increments.</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item border rounded-lg overflow-hidden">
+                                <button class="accordion-header w-full text-left p-4 bg-gray-50 hover:bg-gray-100 flex justify-between items-center">
+                                    <span class="font-semibold text-gray-700">Non-Negotiable Safety Rules</span>
+                                    <span class="text-xl text-gray-500">+</span>
+                                </button>
+                                <div class="accordion-content">
+                                    <div class="p-4 border-t">
+                                        <ul class="list-disc list-inside space-y-2 text-gray-600">
+                                            <li><strong>Technique is Everything:</strong> Never sacrifice form for heavier weight. Learn new exercises with light weight.</li>
+                                            <li><strong>Supervision is Key:</strong> Train with a qualified adult or knowledgeable partner. Always use a spotter for exercises like the bench press.</li>
+                                            <li><strong>Listen to Your Body:</strong> Stop immediately if you feel sharp pain. Do not "work through" it.</li>
+                                            <li><strong>Rest is Mandatory:</strong> Muscles grow during rest, not in the gym. Training every day is counterproductive and increases injury risk. Follow the program's rest days.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Nutrition Section -->
+                <section id="nutrition" class="tab-content content-inactive">
+                     <div class="bg-white p-6 md:p-8 rounded-xl shadow-sm">
+                        <h2 class="text-3xl font-bold text-gray-800 mb-4">Fueling the Machine</h2>
+                        <p class="text-gray-600 mb-8">Training provides the stimulus, but nutrition provides the raw materials for growth. This section visualizes your macro split and now includes an AI-powered meal planner to help you hit your targets.</p>
+                        <div class="grid md:grid-cols-2 gap-8 items-center">
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-700 mb-4">Daily Macronutrient Targets</h3>
+                                <p class="text-gray-600 mb-4">Aim for 2,600-3,200 calories per day. Your diet should be balanced across the three macronutrients.</p>
+                                <ul class="space-y-3">
+                                    <li class="flex items-start">
+                                        <span class="w-4 h-4 rounded-full bg-[#63A18C] mt-1 mr-3 flex-shrink-0"></span>
+                                        <div><strong class="text-gray-700">Protein (30%):</strong> Essential for muscle repair.</div>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="w-4 h-4 rounded-full bg-[#E4D5C7] mt-1 mr-3 flex-shrink-0"></span>
+                                        <div><strong class="text-gray-700">Carbohydrates (45%):</strong> Powers your workouts.</div>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="w-4 h-4 rounded-full bg-[#A58A73] mt-1 mr-3 flex-shrink-0"></span>
+                                        <div><strong class="text-gray-700">Fats (25%):</strong> Crucial for hormone regulation.</div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="nutritionChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="mt-12 border-t pt-8">
+                            <h3 class="text-2xl font-bold text-gray-700 mb-4">✨ AI Meal Planner</h3>
+                            <p class="text-gray-600 mb-4">Enter some healthy foods you like (e.g., chicken, rice, broccoli, oats, apples), and the AI will generate a sample meal plan for one day.</p>
+                            <div class="mb-4">
+                                <textarea id="food-preferences" class="w-full p-2 border rounded-md" placeholder="e.g., chicken, brown rice, avocado, eggs, spinach..."></textarea>
+                            </div>
+                            <button id="generate-meal-plan-btn" class="bg-[#A58A73] text-white font-semibold py-2 px-4 rounded-lg hover:bg-[#8e7661] transition-colors flex items-center justify-center">
+                                <span id="meal-plan-btn-text">Generate Plan</span>
+                                <span id="meal-plan-loader" class="loader" style="display: none;"></span>
+                            </button>
+                            <div id="meal-plan-output" class="mt-6 space-y-4"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Workouts Section -->
+                <section id="workouts" class="tab-content content-inactive">
+                    <div class="bg-white p-6 md:p-8 rounded-xl shadow-sm">
+                        <h2 class="text-3xl font-bold text-gray-800 mb-4">The Workout Blueprint</h2>
+                        <p class="text-gray-600 mb-6">This is your practical guide to training. Start with the 4-Day Split. After 6-12 months, consider the 6-Day Split. Tap the `ⓘ` icon next to any exercise to get a detailed breakdown from our ✨ AI Exercise Coach.</p>
+                        
+                        <div class="flex justify-center mb-8">
+                            <div class="bg-gray-100 rounded-full p-1 flex">
+                                <button id="split-4day-btn" class="workout-split-btn px-6 py-2 rounded-full text-sm font-semibold bg-white text-[#A58A73] shadow">4-Day Split</button>
+                                <button id="split-6day-btn" class="workout-split-btn px-6 py-2 rounded-full text-sm font-semibold text-gray-600">6-Day Split</button>
+                            </div>
+                        </div>
+
+                        <div id="workout-plan-4day" class="workout-plan">
+                            <div class="text-center mb-6">
+                                <h3 class="text-2xl font-bold text-gray-700">4-Day Upper/Lower Split</h3>
+                                <p class="text-gray-500">Schedule: 2 days on, 1 day off, 2 days on, 2 days off.</p>
+                            </div>
+                            <div class="grid md:grid-cols-2 gap-6" id="4day-workouts-container"></div>
+                        </div>
+
+                        <div id="workout-plan-6day" class="workout-plan" style="display: none;">
+                            <div class="text-center mb-6">
+                                <h3 class="text-2xl font-bold text-gray-700">6-Day Push/Pull/Legs Split</h3>
+                                <p class="text-gray-500">Schedule: 3 days on, 1 day off, 3 days on, repeat.</p>
+                            </div>
+                            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="6day-workouts-container"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Recovery Section -->
+                <section id="recovery" class="tab-content content-inactive">
+                    <div class="bg-white p-6 md:p-8 rounded-xl shadow-sm">
+                        <h2 class="text-3xl font-bold text-gray-800 mb-4">The Art of Recovery</h2>
+                        <p class="text-gray-600 mb-8">You don't grow in the gym; you grow when you recover. Prioritizing sleep, smart rest days, and planned deloads will prevent burnout and maximize your results.</p>
+                        
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-700 mb-4">Dynamic Warm-Up (10-15 Mins)</h3>
+                                <ul class="space-y-2 text-gray-700">
+                                    <li class="flex items-center"><span>&#9205;</span><span class="ml-2">5 min Light Cardio</span></li>
+                                    <li class="flex items-center"><span>&#129340;</span><span class="ml-2">Arm Circles & Leg Swings</span></li>
+                                    <li class="flex items-center"><span>&#127939;</span><span class="ml-2">High Knees & Butt Kicks</span></li>
+                                </ul>
+                            </div>
+                             <div>
+                                <h3 class="text-xl font-semibold text-gray-700 mb-4">Static Cool-Down (10-15 Mins)</h3>
+                                <ul class="space-y-2 text-gray-700">
+                                    <li class="flex items-center"><span>&#129336;</span><span class="ml-2">Chest & Shoulder Stretches</span></li>
+                                    <li class="flex items-center"><span>&#129495;</span><span class="ml-2">Quad & Hamstring Stretches</span></li>
+                                    <li class="flex items-center"><span>&#129499;</span><span class="ml-2">Back & Bicep Stretches</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                         <div class="mt-12 bg-gray-50 p-6 rounded-lg">
+                            <h3 class="text-xl font-semibold text-gray-700 mb-4">Long-Term Strategy</h3>
+                            <ul class="space-y-3 text-gray-600">
+                               <li><strong>Sleep is King:</strong> Aim for 8-10 hours per night.</li>
+                               <li><strong>Active Recovery:</strong> Light activity on rest days speeds up recovery.</li>
+                               <li><strong>Deload Weeks:</strong> Every 8-12 weeks, reduce intensity for one week.</li>
+                               <li><strong>Keep a Log:</strong> Track everything to ensure progressive overload.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- AI Coach Modal -->
+    <div id="ai-coach-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4" style="display: none;">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div class="p-6 border-b flex justify-between items-center">
+                <h3 id="modal-title" class="text-2xl font-bold text-gray-800">AI Exercise Coach</h3>
+                <button id="modal-close-btn" class="text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+            </div>
+            <div id="modal-content" class="p-6">
+                <div class="flex justify-center items-center h-40">
+                    <div class="w-8 h-8 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const tabs = document.querySelectorAll('.nav-tab');
+    const contents = document.querySelectorAll('.tab-content');
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function () {
+            tabs.forEach(t => {
+                t.classList.remove('tab-active');
+                t.classList.add('tab-inactive');
+            });
+            contents.forEach(c => {
+                c.classList.remove('content-active');
+                c.classList.add('content-inactive');
+            });
+
+            this.classList.add('tab-active');
+            this.classList.remove('tab-inactive');
+            document.getElementById(this.dataset.tab).classList.add('content-active');
+            document.getElementById(this.dataset.tab).classList.remove('content-inactive');
+        });
+    });
+
+    const accordionHeaders = document.querySelectorAll('.accordion-header');
+    accordionHeaders.forEach(header => {
+        header.addEventListener('click', () => {
+            const content = header.nextElementSibling;
+            const item = header.parentElement;
+            const icon = header.querySelector('span:last-child');
+
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+                icon.textContent = '+';
+                item.classList.remove('bg-gray-50');
+            } else {
+                document.querySelectorAll('.accordion-content').forEach(c => c.style.maxHeight = null);
+                document.querySelectorAll('.accordion-header span:last-child').forEach(i => i.textContent = '+');
+                document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('bg-gray-50'));
+                
+                content.style.maxHeight = content.scrollHeight + "px";
+                icon.textContent = '-';
+                item.classList.add('bg-gray-50');
+            }
+        });
+    });
+
+    const nutritionChartCtx = document.getElementById('nutritionChart').getContext('2d');
+    new Chart(nutritionChartCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Carbohydrates', 'Protein', 'Fats'],
+            datasets: [{
+                label: 'Macronutrient Split',
+                data: [45, 30, 25],
+                backgroundColor: ['#E4D5C7', '#63A18C', '#A58A73'],
+                borderColor: '#FDFBF8',
+                borderWidth: 4,
+                hoverBorderWidth: 6,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '70%',
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.label || '';
+                            if (label) { label += ': '; }
+                            if (context.parsed !== null) { label += context.parsed + '%'; }
+                            return label;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    const split4DayBtn = document.getElementById('split-4day-btn');
+    const split6DayBtn = document.getElementById('split-6day-btn');
+    const plan4Day = document.getElementById('workout-plan-4day');
+    const plan6Day = document.getElementById('workout-plan-6day');
+
+    split4DayBtn.addEventListener('click', () => {
+        plan4Day.style.display = 'block';
+        plan6Day.style.display = 'none';
+        split4DayBtn.classList.add('bg-white', 'text-[#A58A73]', 'shadow');
+        split6DayBtn.classList.remove('bg-white', 'text-[#A58A73]', 'shadow');
+    });
+
+    split6DayBtn.addEventListener('click', () => {
+        plan4Day.style.display = 'none';
+        plan6Day.style.display = 'block';
+        split6DayBtn.classList.add('bg-white', 'text-[#A58A73]', 'shadow');
+        split4DayBtn.classList.remove('bg-white', 'text-[#A58A73]', 'shadow');
+    });
+    
+    const workouts4Day = [
+        { title: 'Upper Body A', focus: 'Strength & Horizontal', exercises: [
+            { name: 'Barbell Bench Press', sets: 3, reps: '6-8' }, { name: 'Barbell Bent-Over Row', sets: 3, reps: '6-8' }, { name: 'Incline Dumbbell Press', sets: 3, reps: '8-12' }, { name: 'Seated Cable Row', sets: 3, reps: '8-12' }, { name: 'Dumbbell Lateral Raise', sets: 3, reps: '12-15' }, { name: 'Barbell Curl', sets: 3, reps: '8-12' }, { name: 'Triceps Pushdown', sets: 3, reps: '10-15' },
+        ]},
+        { title: 'Lower Body A', focus: 'Strength & Squat', exercises: [
+            { name: 'Barbell Back Squat', sets: 3, reps: '6-8' }, { name: 'Romanian Deadlift', sets: 3, reps: '8-10' }, { name: 'Leg Press', sets: 3, reps: '10-12' }, { name: 'Dumbbell Lunges', sets: 3, reps: '10-12 /leg' }, { name: 'Standing Calf Raise', sets: 4, reps: '12-15' }, { name: 'Hanging Knee Raise', sets: 3, reps: '10-15' },
+        ]},
+        { title: 'Upper Body B', focus: 'Hypertrophy & Vertical', exercises: [
+            { name: 'Pull-Ups', sets: 3, reps: 'AMRAP' }, { name: 'Seated DB Overhead Press', sets: 3, reps: '8-12' }, { name: 'Chest Dips', sets: 3, reps: '8-12' }, { name: 'T-Bar Row', sets: 3, reps: '8-12' }, { name: 'Face Pulls', sets: 3, reps: '15-20' }, { name: 'Incline Dumbbell Curl', sets: 3, reps: '10-15' }, { name: 'Overhead Triceps Extension', sets: 3, reps: '10-15' },
+        ]},
+        { title: 'Lower Body B', focus: 'Hypertrophy & Hinge', exercises: [
+            { name: 'Barbell Hip Thrust', sets: 3, reps: '8-12' }, { name: 'Bulgarian Split Squat', sets: 3, reps: '10-12 /leg' }, { name: 'Leg Curl', sets: 3, reps: '12-15' }, { name: 'Leg Extension', sets: 3, reps: '12-15' }, { name: 'Seated Calf Raise', sets: 4, reps: '15-20' }, { name: 'Plank', sets: 3, reps: '60s hold' },
+        ]},
+    ];
+
+    const workouts6Day = [
+        { title: 'Push 1', focus: 'Heavy', exercises: [ { name: 'Barbell Bench Press', sets: 4, reps: '5-8' }, { name: 'Standing Barbell OHP', sets: 3, reps: '6-8' }, { name: 'Incline Barbell Press', sets: 3, reps: '6-8' }, { name: 'Close-Grip Bench Press', sets: 3, reps: '8-10' }, { name: 'Dumbbell Lateral Raise', sets: 4, reps: '10-12' }, ]},
+        { title: 'Pull 1', focus: 'Heavy', exercises: [ { name: 'Deadlift', sets: 3, reps: '4-6' }, { name: 'Weighted Pull-Ups', sets: 3, reps: '6-8' }, { name: 'Barbell Bent-Over Row', sets: 3, reps: '6-8' }, { name: 'Barbell Shrugs', sets: 3, reps: '8-10' }, { name: 'Barbell Curl', sets: 3, reps: '8-10' }, ]},
+        { title: 'Legs 1', focus: 'Heavy', exercises: [ { name: 'Barbell Back Squat', sets: 4, reps: '5-8' }, { name: 'Stiff-Legged Deadlift', sets: 3, reps: '8-10' }, { name: 'Leg Press', sets: 3, reps: '8-10' }, { name: 'Standing Calf Raise', sets: 5, reps: '10-12' }, { name: 'Cable Crunches', sets: 3, reps: '10-15' }, ]},
+        { title: 'Push 2', focus: 'Hypertrophy', exercises: [ { name: 'Incline Dumbbell Press', sets: 4, reps: '10-12' }, { name: 'Seated DB Shoulder Press', sets: 3, reps: '10-12' }, { name: 'Machine Chest Fly', sets: 3, reps: '12-15' }, { name: 'Cable Lateral Raise', sets: 3, reps: '15-20' }, { name: 'Overhead Triceps Ext.', sets: 3, reps: '12-15' }, { name: 'Triceps Pushdown', sets: 3, reps: '12-15' }, ]},
+        { title: 'Pull 2', focus: 'Hypertrophy', exercises: [ { name: 'Lat Pulldown (Wide)', sets: 4, reps: '10-12' }, { name: 'Seated Cable Row (Close)', sets: 3, reps: '10-12' }, { name: 'Single-Arm DB Row', sets: 3, reps: '10-12 /arm' }, { name: 'Face Pulls', sets: 4, reps: '15-20' }, { name: 'DB Preacher Curl', sets: 3, reps: '12-15' }, { name: 'Hammer Curl', sets: 3, reps: '12-15' }, ]},
+        { title: 'Legs 2', focus: 'Hypertrophy', exercises: [ { name: 'Leg Press', sets: 4, reps: '12-15' }, { name: 'Barbell Hip Thrust', sets: 3, reps: '10-12' }, { name: 'Leg Extension', sets: 3, reps: '15-20' }, { name: 'Seated Leg Curl', sets: 3, reps: '15-20' }, { name: 'Seated Calf Raise', sets: 5, reps: '15-20' }, { name: 'Planks', sets: 3, reps: 'Hold to failure' }, ]},
+    ];
+
+    function createWorkoutCard(workout) {
+        let exercisesHtml = workout.exercises.map(ex => `
+            <li class="flex justify-between items-center text-gray-600 py-1">
+                <span>${ex.name}</span>
+                <div class="flex items-center">
+                    <span class="font-semibold text-gray-700 mr-3">${ex.sets} x ${ex.reps}</span>
+                    <button class="ai-coach-btn text-lg text-blue-500 hover:text-blue-700" data-exercise-name="${ex.name}">&#9432;</button>
+                </div>
+            </li>
+        `).join('');
+
+        return `<div class="card rounded-lg p-6">
+                    <h4 class="font-bold text-xl text-[#A58A73]">${workout.title}</h4>
+                    <p class="text-sm text-gray-500 mb-4">${workout.focus} Focus</p>
+                    <ul class="space-y-2">${exercisesHtml}</ul>
+                </div>`;
+    }
+
+    const container4day = document.getElementById('4day-workouts-container');
+    workouts4Day.forEach(w => container4day.innerHTML += createWorkoutCard(w));
+    
+    const container6day = document.getElementById('6day-workouts-container');
+    workouts6Day.forEach(w => container6day.innerHTML += createWorkoutCard(w));
+
+    // Gemini API Integration
+    const apiKey = ""; 
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+    const mealPlanBtn = document.getElementById('generate-meal-plan-btn');
+    const mealPlanOutput = document.getElementById('meal-plan-output');
+    const mealPlanBtnText = document.getElementById('meal-plan-btn-text');
+    const mealPlanLoader = document.getElementById('meal-plan-loader');
+
+    mealPlanBtn.addEventListener('click', async () => {
+        const foodPrefs = document.getElementById('food-preferences').value;
+        if (!foodPrefs) {
+            mealPlanOutput.innerHTML = `<p class="text-red-500">Please enter some foods you like.</p>`;
+            return;
+        }
+
+        mealPlanBtnText.style.display = 'none';
+        mealPlanLoader.style.display = 'block';
+        mealPlanBtn.disabled = true;
+        mealPlanOutput.innerHTML = '<div class="flex justify-center items-center"><div class="w-8 h-8 border-4 border-gray-200 border-t-gray-500 rounded-full animate-spin"></div></div>';
+
+        const prompt = `Create a simple one-day meal plan for a 16-year-old male aiming for a lean bulk (around 2800-3000 calories) with a macro split of 45% carbs, 30% protein, and 25% fat. The user enjoys the following foods: ${foodPrefs}. Structure the response as a JSON object with keys "breakfast", "lunch", "dinner", and "snacks". Each key should have a "meal" (string) and "items" (array of strings).`;
+        
+        const payload = {
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+                responseMimeType: "application/json",
+            }
+        };
+
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const result = await response.json();
+            
+            if (result.candidates && result.candidates[0].content.parts[0].text) {
+                const plan = JSON.parse(result.candidates[0].content.parts[0].text);
+                let outputHtml = '';
+                for (const mealKey in plan) {
+                    const meal = plan[mealKey];
+                    outputHtml += `<div class="card p-4 rounded-lg">
+                                    <h4 class="font-bold text-lg capitalize text-[#63A18C]">${mealKey}</h4>
+                                    <p class="text-gray-700 font-semibold">${meal.meal}</p>
+                                    <ul class="list-disc list-inside text-gray-600 mt-2">
+                                        ${meal.items.map(item => `<li>${item}</li>`).join('')}
+                                    </ul>
+                                   </div>`;
+                }
+                mealPlanOutput.innerHTML = outputHtml;
+            } else {
+                mealPlanOutput.innerHTML = `<p class="text-red-500">Sorry, I couldn't generate a plan. The response was unexpected. Please try again.</p>`;
+            }
+        } catch (error) {
+            mealPlanOutput.innerHTML = `<p class="text-red-500">An error occurred. Please check your connection and try again.</p>`;
+        } finally {
+            mealPlanBtnText.style.display = 'block';
+            mealPlanLoader.style.display = 'none';
+            mealPlanBtn.disabled = false;
+        }
+    });
+
+    // AI Coach Modal Logic
+    const modal = document.getElementById('ai-coach-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalContent = document.getElementById('modal-content');
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+
+    document.getElementById('workouts').addEventListener('click', async (e) => {
+        if (e.target && e.target.classList.contains('ai-coach-btn')) {
+            const exerciseName = e.target.dataset.exerciseName;
+            modalTitle.textContent = exerciseName;
+            modalContent.innerHTML = '<div class="flex justify-center items-center h-40"><div class="w-8 h-8 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin"></div></div>';
+            modal.style.display = 'flex';
+
+            const prompt = `As a fitness expert, provide a clear and concise guide for the exercise: "${exerciseName}". Structure your response into three sections: 1. **How to Perform:** (a step-by-step guide), 2. **Common Mistakes:** (a bulleted list of what to avoid), and 3. **Muscles Worked:** (a brief list of primary and secondary muscles). Use markdown for formatting.`;
+
+            const payload = { contents: [{ parts: [{ text: prompt }] }] };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                if (result.candidates && result.candidates[0].content.parts[0].text) {
+                    // Basic markdown to HTML conversion
+                    let htmlContent = result.candidates[0].content.parts[0].text;
+                    htmlContent = htmlContent.replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-800">$1</strong>');
+                    htmlContent = htmlContent.replace(/\n/g, '<br>');
+                    htmlContent = htmlContent.replace(/(\d\.\s)/g, '<br><br>$1');
+                    htmlContent = htmlContent.replace(/\* /g, '<br>&bull; ');
+                    modalContent.innerHTML = `<div class="text-gray-600 leading-relaxed">${htmlContent}</div>`;
+                } else {
+                    modalContent.innerHTML = `<p class="text-red-500">Could not retrieve exercise info. Please try again.</p>`;
+                }
+            } catch (error) {
+                modalContent.innerHTML = `<p class="text-red-500">An error occurred. Please check your connection.</p>`;
+            }
+        }
+    });
+
+    modalCloseBtn.addEventListener('click', () => modal.style.display = 'none');
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+});
+</script>
+
+</body>
+</html>
+ 
